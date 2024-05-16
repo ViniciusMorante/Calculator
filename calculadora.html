@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Salário</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #6f74dd, #26c1c1);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .container:hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    input[type="number"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="number"]:hover {
+      border-color: #4CAF50;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #resultado {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de Salário</h1>
+
+    <label for="salario">Salário Bruto (R$): </label>
+    <input type="number" id="salario" min="0" step="0.01" required><br>
+
+    <label for="descontoINSS">Desconto INSS (% ou R$): </label>
+    <input type="number" id="descontoINSS" min="0" step="0.01"><br>
+
+    <label for="descontoIRRF">Desconto IRRF (% ou R$): </label>
+    <input type="number" id="descontoIRRF" min="0" step="0.01"><br>
+
+    <button onclick="calcularSalario()">Calcular</button>
+
+    <p id="resultado"></p>
+  </div>
+
+  <script>
+    function calcularSalario() {
+      var salarioBruto = parseFloat(document.getElementById("salario").value);
+      var descontoINSS = parseFloat(document.getElementById("descontoINSS").value);
+      var descontoIRRF = parseFloat(document.getElementById("descontoIRRF").value);
+
+      if (isNaN(salarioBruto) || salarioBruto <= 0) {
+        alert("Por favor, insira um salário bruto válido.");
+        return;
+      }
+
+      var salarioLiquido = salarioBruto;
+
+      if (!isNaN(descontoINSS)) {
+        if (descontoINSS > 0 && descontoINSS <= 100) {
+          if (descontoINSS > 1) {
+            descontoINSS = descontoINSS / 100; // Convertendo para porcentagem
+          }
+          var descontoINSSValor = salarioBruto * descontoINSS;
+          salarioLiquido -= descontoINSSValor;
+        } else {
+          alert("O desconto do INSS deve ser um valor entre 0 e 100.");
+          return;
+        }
+      }
+
+      if (!isNaN(descontoIRRF)) {
+        if (descontoIRRF > 0 && descontoIRRF <= 100) {
+          if (descontoIRRF > 1) {
+            descontoIRRF = descontoIRRF / 100; // Convertendo para porcentagem
+          }
+          var descontoIRRFValor = salarioLiquido * descontoIRRF;
+          salarioLiquido -= descontoIRRFValor;
+        } else {
+          alert("O desconto do IRRF deve ser um valor entre 0 e 100.");
+          return;
+        }
+      }
+
+      var resultado = "Salário Líquido: R$ " + salarioLiquido.toFixed(2);
+      if (!isNaN(descontoINSS)) {
+        resultado += "<br>Desconto INSS: R$ " + descontoINSSValor.toFixed(2);
+      }
+      if (!isNaN(descontoIRRF)) {
+        resultado += "<br>Desconto IRRF: R$ " + descontoIRRFValor.toFixed(2);
+      }
+      
+      document.getElementById("resultado").innerHTML = resultado;
+    }
+  </script>
+</body>
+</html>
